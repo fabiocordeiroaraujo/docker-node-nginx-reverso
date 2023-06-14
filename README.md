@@ -29,6 +29,6 @@ You will see the message "Full Cycle Rocks!" followed by a list of names registe
    ```bash
    http://localhost:8080/name/John
 
-   You will receive a response indicating that the name has been inserted successfully.
+You will receive a response indicating that the name has been inserted successfully.
 
 Feel free to explore and adapt the code in this repository according to your needs.
