@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+
+  app:
+    build: 
+      context: ./node
+      dockerfile: Dockerfile
+    image: fabiocordeiroaraujo/node
+    container_name: app
+    networks: 
+      - nodenet
+    tty: true
+    ports:
+      - "3000:3000"    
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    # Executa comandos internos no container
+    command: --innodb-use-native-aio=0
+    container_name: db
+    # Configura o container para sempre restartar caso o container caia
+    restart: always
+    # Para permitir iteração com o container
+    tty: true
+    # Configuração de volumes
+    volumes:
+      # Volume com todos os arquivos do database MySQL
+      - ./mysqldb:/var/lib/mysql
+    # Configura variáveis de ambiente
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    networks:
+      - nodenet
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: fabiocordeiroaraujo/nginx:prod
+    container_name: nginx
+    networks:
+     - nodenet
+    ports:
+     - "8080:80"
+    depends_on:
+     - app
+
+networks:
+  nodenet:
+    driver: bridge
