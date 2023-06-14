@@ -18,7 +18,7 @@ Make sure you have Docker and Docker Compose installed on your machine before pr
    In the project directory, execute the following command to start the containers:
 
    ```bash
-   docker-compose up -d
+   docker-compose up -d --build
 
 You will see the message "Full Cycle Rocks!" followed by a list of names registered in the database.
 
