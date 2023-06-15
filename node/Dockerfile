@@ -11,6 +11,4 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 RUN  chmod +x start.sh
 
-RUN npm install
-
 EXPOSE 3000
