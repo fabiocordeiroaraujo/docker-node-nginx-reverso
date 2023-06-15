@@ -2,6 +2,22 @@ version: '3'
 
 services:
 
+  db:
+    image: mysql:5.7    
+    command: --innodb-use-native-aio=0
+    container_name: db    
+    restart: always    
+    tty: true    
+    volumes:      
+      - ./mysqldb:/var/lib/mysql    
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+    networks:
+      - nodenet
+
   app:
     build: 
       context: ./node
@@ -10,33 +26,12 @@ services:
     container_name: app
     networks: 
       - nodenet
-    tty: true
+    tty: true    
     ports:
-      - "3000:3000"    
+      - "3000:3000"        
+    command: sh -c "dockerize -wait tcp://db:3306 -timeout 300s -wait-retry-interval 30s ./start.sh"
     depends_on:
       - db
-
-  db:
-    image: mysql:5.7
-    # Executa comandos internos no container
-    command: --innodb-use-native-aio=0
-    container_name: db
-    # Configura o container para sempre restartar caso o container caia
-    restart: always
-    # Para permitir iteração com o container
-    tty: true
-    # Configuração de volumes
-    volumes:
-      # Volume com todos os arquivos do database MySQL
-      - ./mysqldb:/var/lib/mysql
-    # Configura variáveis de ambiente
-    environment:
-      - MYSQL_DATABASE=nodedb
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=admin
-    networks:
-      - nodenet
 
   nginx:
     build:
